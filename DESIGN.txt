@@ -1,0 +1,26 @@
+Methods left in Functions class:
+
+getNumFromRange(): this method did not act on any objects so it made no logical sense to me to move it into another class
+processImageLine(): this method did not act on any classes that were given; the code would be no more efficient moved into another class
+getImages(): this method did not act on any classes that were given; the code would be no more efficient moved into another class
+setAlpha(): this method did not act on any classes that were given; the code would be no more efficient moved into another class
+clamp():  this method did not act on any objects so it made no logical sense to me to move it into another class
+
+Methods that could reasonably be placed in multiple classes:
+
+executeAction(): I chose to place this method in the Action class but it could also be placed in the EventScheduler class. I chose the Action class because scheduler was meerly 
+used as an argument for what the method would actually be acting upon (an Action object). Same for executeAnimationAction() and executeActivityAction()
+
+executeSaplingActivity(): the following explanation applies to every executeActivity method for every different Entity. I chose to place these methods in the Entity class 
+because I came to the conclusion that the method was acting upon an Entity object and mostly using the 3 following objects in the methods parameters simply as arguments throughout
+the method.
+
+multiple "Parse" methods that I placed in the ImageStore class could alse be placed in the worldModel class. None of these functions used the the WordModel or ImageStore objects 
+as arguments to sub methods in the main method so I saw moving them to the ImageStore or WorldModel class equally efficient.
+
+The occupant methods (getOccupancyCell(), setOccupancyCell(), isOccupied()) that I decided to place in the WorldModel class could also have been placed in the Point class.
+I went with the WorldModel class because the majority of the code within these methods acted on WorldModel objects instead of Point objects.
+
+
+
+
