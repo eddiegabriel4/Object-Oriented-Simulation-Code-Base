@@ -97,7 +97,7 @@ public final class WorldModel
             Entity target,
             EventScheduler scheduler)
     {
-        if (Functions.adjacent(dude.position, target.position)) {
+        if (dude.position.adjacent(target.position)) {
             dude.resourceCount += 1;
             target.health--;
             return true;

@@ -172,7 +172,7 @@ public final class Entity
             Entity target,
             EventScheduler scheduler)
     {
-        if (Functions.adjacent(this.position, target.position)) {
+        if (this.position.adjacent(target.position)) {
             target.removeEntity(world);
             scheduler.unscheduleAllEvents(target);
             return true;
@@ -333,7 +333,7 @@ public final class Entity
             Entity target,
             EventScheduler scheduler)
     {
-        if (Functions.adjacent(this.position, target.position)) {
+        if (this.position.adjacent(target.position)) {
             return true;
         }
         else {
