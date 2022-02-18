@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class FAIRY implements Able_to_animate, Able_to_activate, Entity {
+public class FAIRY implements Able_to_animate, Able_to_activate {
 
     public String id;
     public Point position;

@@ -2,7 +2,7 @@ import processing.core.PImage;
 
 import java.util.List;
 
-public class SAPLING implements Able_to_animate, Able_to_activate, Transformable, Entity {
+public class SAPLING implements Able_to_animate, Able_to_activate, Transformable {
 
     public String id;
     public Point position;

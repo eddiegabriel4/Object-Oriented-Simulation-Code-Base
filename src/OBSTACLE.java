@@ -2,7 +2,7 @@ import processing.core.PImage;
 
 import java.util.List;
 
-public class OBSTACLE implements Able_to_animate, Entity{
+public class OBSTACLE implements Able_to_animate {
 
     public String id;
     public Point position;

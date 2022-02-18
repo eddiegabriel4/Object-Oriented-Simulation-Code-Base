@@ -1,4 +1,4 @@
-public class Activity_Action implements Action{
+public class Activity_Action implements Action {
 
     public Able_to_activate entity;
     public WorldModel world;

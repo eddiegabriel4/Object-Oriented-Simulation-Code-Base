@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class DUDE_FULL implements Able_to_animate, Able_to_activate, Full_move, Entity {
+public class DUDE_FULL implements Able_to_animate, Able_to_activate, Full_move {
 
     public String id;
     public Point position;
