@@ -107,9 +107,8 @@ public final class ImageStore
                     Integer.parseInt(properties[Functions.SAPLING_ROW]));
             String id = properties[Functions.SAPLING_ID];
             int health = Integer.parseInt(properties[Functions.SAPLING_HEALTH]);
-            Entity entity = new Entity(EntityKind.SAPLING, id, pt, this.getImageList(Functions.SAPLING_KEY), 0, 0,
-                    Functions.SAPLING_ACTION_ANIMATION_PERIOD, Functions.SAPLING_ACTION_ANIMATION_PERIOD, health, Functions.SAPLING_HEALTH_LIMIT);
-            world.tryAddEntity(entity);
+            SAPLING sapling = new SAPLING(id, pt, this.getImageList(Functions.SAPLING_KEY));
+            world.tryAddEntity(sapling);
         }
 
         return properties.length == Functions.SAPLING_NUM_PROPERTIES;
@@ -121,12 +120,12 @@ public final class ImageStore
         if (properties.length == Functions.DUDE_NUM_PROPERTIES) {
             Point pt = new Point(Integer.parseInt(properties[Functions.DUDE_COL]),
                     Integer.parseInt(properties[Functions.DUDE_ROW]));
-            Entity entity = pt.createDudeNotFull(properties[Functions.DUDE_ID],
+            DUDE_NOT_FULL dude_not_full = new DUDE_NOT_FULL(properties[Functions.DUDE_ID], pt,
                     Integer.parseInt(properties[Functions.DUDE_ACTION_PERIOD]),
                     Integer.parseInt(properties[Functions.DUDE_ANIMATION_PERIOD]),
                     Integer.parseInt(properties[Functions.DUDE_LIMIT]),
                     this.getImageList(Functions.DUDE_KEY));
-            world.tryAddEntity(entity);
+            world.tryAddEntity(dude_not_full);
         }
 
         return properties.length == Functions.DUDE_NUM_PROPERTIES;
@@ -137,11 +136,11 @@ public final class ImageStore
         if (properties.length == Functions.FAIRY_NUM_PROPERTIES) {
             Point pt = new Point(Integer.parseInt(properties[Functions.FAIRY_COL]),
                     Integer.parseInt(properties[Functions.FAIRY_ROW]));
-            Entity entity = pt.createFairy(properties[Functions.FAIRY_ID],
+            FAIRY fairy = new FAIRY(properties[Functions.FAIRY_ID],pt,
                     Integer.parseInt(properties[Functions.FAIRY_ACTION_PERIOD]),
                     Integer.parseInt(properties[Functions.FAIRY_ANIMATION_PERIOD]),
                     this.getImageList(Functions.FAIRY_KEY));
-            world.tryAddEntity(entity);
+            world.tryAddEntity(fairy);
         }
 
         return properties.length == Functions.FAIRY_NUM_PROPERTIES;
@@ -152,12 +151,12 @@ public final class ImageStore
         if (properties.length == Functions.TREE_NUM_PROPERTIES) {
             Point pt = new Point(Integer.parseInt(properties[Functions.TREE_COL]),
                     Integer.parseInt(properties[Functions.TREE_ROW]));
-            Entity entity = pt.createTree(properties[Functions.TREE_ID],
+            TREE tree = new TREE(properties[Functions.TREE_ID], pt,
                     Integer.parseInt(properties[Functions.TREE_ACTION_PERIOD]),
                     Integer.parseInt(properties[Functions.TREE_ANIMATION_PERIOD]),
                     Integer.parseInt(properties[Functions.TREE_HEALTH]),
                     this.getImageList(Functions.TREE_KEY));
-            world.tryAddEntity(entity);
+            world.tryAddEntity(tree);
         }
 
         return properties.length == Functions.TREE_NUM_PROPERTIES;
@@ -168,11 +167,11 @@ public final class ImageStore
         if (properties.length == Functions.OBSTACLE_NUM_PROPERTIES) {
             Point pt = new Point(Integer.parseInt(properties[Functions.OBSTACLE_COL]),
                     Integer.parseInt(properties[Functions.OBSTACLE_ROW]));
-            Entity entity = pt.createObstacle(properties[Functions.OBSTACLE_ID],
+            OBSTACLE obstacle = new OBSTACLE(properties[Functions.OBSTACLE_ID], pt,
                     Integer.parseInt(properties[Functions.OBSTACLE_ANIMATION_PERIOD]),
                     this.getImageList(
                             Functions.OBSTACLE_KEY));
-            world.tryAddEntity(entity);
+            world.tryAddEntity(obstacle);
         }
 
         return properties.length == Functions.OBSTACLE_NUM_PROPERTIES;
@@ -184,10 +183,10 @@ public final class ImageStore
         if (properties.length == Functions.HOUSE_NUM_PROPERTIES) {
             Point pt = new Point(Integer.parseInt(properties[Functions.HOUSE_COL]),
                     Integer.parseInt(properties[Functions.HOUSE_ROW]));
-            Entity entity = pt.createHouse(properties[Functions.HOUSE_ID],
+            HOUSE house = new HOUSE(properties[Functions.HOUSE_ID],pt,
                     this.getImageList(
                             Functions.HOUSE_KEY));
-            world.tryAddEntity(entity);
+            world.tryAddEntity(house);
         }
 
         return properties.length == Functions.HOUSE_NUM_PROPERTIES;

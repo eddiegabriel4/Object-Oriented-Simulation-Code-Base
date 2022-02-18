@@ -6,8 +6,18 @@ import processing.core.PImage;
  * An entity that exists in the world. See EntityKind for the
  * different kinds of entities that exist.
  */
-public final class Entity
-{
+public interface Entity {
+
+    public void nextImage();
+    public PImage getCurrentImage();
+    public Point getPosition();
+    public void changePosition(Point position);
+    public void changeHealth(int points);
+    public int getHealth();
+    public String getID();
+
+}
+    /*
     public EntityKind kind;
     public String id;
     public Point position;
@@ -45,10 +55,15 @@ public final class Entity
         this.healthLimit = healthLimit;
     }
 
+    /*
+
     public PImage getCurrentImage() {
-            return ((Entity)this).images.get(((Entity)this).imageIndex);
+        return ((Entity)this).images.get(((Entity)this).imageIndex);
 
     }
+
+
+
     public int getAnimationPeriod() {
         switch (this.kind) {
             case DUDE_FULL:
@@ -65,14 +80,20 @@ public final class Entity
         }
     }
 
+
+
     public void nextImage() {
         this.imageIndex = (this.imageIndex + 1) % this.images.size();
     }
+
+
 
     public Action createAnimationAction(int repeatCount) {
         return new Action(ActionKind.ANIMATION, this, null, null,
                 repeatCount);
     }
+
+
 
     public void executeSaplingActivity(
             WorldModel world,
@@ -88,6 +109,8 @@ public final class Entity
         }
     }
 
+
+
     public void executeTreeActivity(
             WorldModel world,
             ImageStore imageStore,
@@ -101,6 +124,8 @@ public final class Entity
                     this.actionPeriod);
         }
     }
+
+
 
     public void executeFairyActivity(
             WorldModel world,
@@ -127,6 +152,8 @@ public final class Entity
                 this.actionPeriod);
     }
 
+
+
     public void executeDudeNotFullActivity(
             WorldModel world,
             ImageStore imageStore,
@@ -135,7 +162,7 @@ public final class Entity
         Optional<Entity> target =
                 world.findNearest(this.position, new ArrayList<>(Arrays.asList(EntityKind.TREE, EntityKind.SAPLING)));
 
-        if (!target.isPresent() || !world.moveToNotFull(this,
+        if (!target.isPresent() || !this.moveToNotFull(world,
                 target.get(),
                 scheduler)
                 || !this.transformNotFull( world, scheduler, imageStore))
@@ -145,6 +172,8 @@ public final class Entity
                     this.actionPeriod);
         }
     }
+
+
 
     public void executeDudeFullActivity(
             WorldModel world,
@@ -165,6 +194,8 @@ public final class Entity
                     this.actionPeriod);
         }
     }
+
+
 
 
     public boolean moveToFairy(
@@ -192,10 +223,12 @@ public final class Entity
         }
     }
 
+
+
     public boolean transformPlant(
-                                          WorldModel world,
-                                          EventScheduler scheduler,
-                                          ImageStore imageStore)
+            WorldModel world,
+            EventScheduler scheduler,
+            ImageStore imageStore)
     {
         if (this.kind == EntityKind.TREE)
         {
@@ -211,6 +244,8 @@ public final class Entity
                     String.format("transformPlant not supported for %s", this));
         }
     }
+
+
 
     public boolean transformTree(
             WorldModel world,
@@ -232,6 +267,9 @@ public final class Entity
 
         return false;
     }
+
+     */
+    /*
 
     public boolean transformSapling(
             WorldModel world,
@@ -270,15 +308,21 @@ public final class Entity
         return false;
     }
 
+
+
     public Action createActivityAction(
-             WorldModel world, ImageStore imageStore)
+            WorldModel world, ImageStore imageStore)
     {
         return new Action(ActionKind.ACTIVITY,this, world, imageStore, 0);
     }
 
+
+
     public void removeEntity(WorldModel world) {
         world.removeEntityAt(this.position);
     }
+
+
 
     public void addEntity(WorldModel world) {
         if (world.withinBounds(this.position)) {
@@ -286,6 +330,10 @@ public final class Entity
             world.entities.add(this);
         }
     }
+
+     */
+
+    /*
 
     public void transformFull(
             WorldModel world,
@@ -303,6 +351,8 @@ public final class Entity
         miner.addEntity(world);
         scheduler.scheduleActions(miner, world, imageStore);
     }
+
+
 
 
     public boolean transformNotFull(
@@ -328,6 +378,8 @@ public final class Entity
         return false;
     }
 
+
+
     public boolean moveToFull(
             WorldModel world,
             Entity target,
@@ -351,7 +403,35 @@ public final class Entity
         }
     }
 
+
+
+    public boolean moveToNotFull(
+            WorldModel world,
+            Entity target,
+            EventScheduler scheduler)
+    {
+        if (this.position.adjacent(target.position)) {
+            this.resourceCount += 1;
+            target.health--;
+            return true;
+        }
+        else {
+            Point nextPos = world.nextPositionDude(this, target.position);
+
+            if (!this.position.equals(nextPos)) {
+                Optional<Entity> occupant = world.getOccupant(nextPos);
+                if (occupant.isPresent()) {
+                    scheduler.unscheduleAllEvents(occupant.get());
+                }
+
+                world.moveEntity(this, nextPos);
+            }
+            return false;
+        }
     }
 
 
 
+}
+
+     */

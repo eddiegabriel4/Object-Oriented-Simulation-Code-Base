@@ -32,14 +32,6 @@ public final class Point
         return result;
     }
 
-    public Entity createStump(
-            String id,
-            List<PImage> images)
-    {
-        return new Entity(EntityKind.STUMP, id, this, images, 0, 0,
-                0, 0, 0, 0);
-    }
-
     public Optional<Entity> nearestEntity(
             List<Entity> entities)
     {
@@ -48,10 +40,10 @@ public final class Point
         }
         else {
             Entity nearest = entities.get(0);
-            int nearestDistance = Functions.distanceSquared(nearest.position, this);
+            int nearestDistance = nearest.getPosition().distanceSquared(this);
 
             for (Entity other : entities) {
-                int otherDistance = Functions.distanceSquared(other.position, this);
+                int otherDistance = other.getPosition().distanceSquared(this);
 
                 if (otherDistance < nearestDistance) {
                     nearest = other;
@@ -63,82 +55,19 @@ public final class Point
         }
     }
 
-    public Entity createSapling(
-            String id,
-            List<PImage> images)
-    {
-        return new Entity(EntityKind.SAPLING, id, this, images, 0, 0,
-                Functions.SAPLING_ACTION_ANIMATION_PERIOD, Functions.SAPLING_ACTION_ANIMATION_PERIOD, 0, Functions.SAPLING_HEALTH_LIMIT);
-    }
-
-    public Entity createDudeFull(
-            String id,
-            int actionPeriod,
-            int animationPeriod,
-            int resourceLimit,
-            List<PImage> images) {
-        return new Entity(EntityKind.DUDE_FULL, id, this, images, resourceLimit, 0,
-                actionPeriod, animationPeriod, 0, 0);
-    }
-
-    public Entity createDudeNotFull(
-            String id,
-            int actionPeriod,
-            int animationPeriod,
-            int resourceLimit,
-            List<PImage> images)
-    {
-        return new Entity(EntityKind.DUDE_NOT_FULL, id, this, images, resourceLimit, 0,
-                actionPeriod, animationPeriod, 0, 0);
-    }
-
-    public Entity createFairy(
-            String id,
-            int actionPeriod,
-            int animationPeriod,
-            List<PImage> images)
-    {
-        return new Entity(EntityKind.FAIRY, id, this, images, 0, 0,
-                actionPeriod, animationPeriod, 0, 0);
-    }
-
-    public Entity createTree(
-            String id,
-            int actionPeriod,
-            int animationPeriod,
-            int health,
-            List<PImage> images)
-    {
-        return new Entity(EntityKind.TREE, id, this, images, 0, 0,
-                actionPeriod, animationPeriod, health, 0);
-    }
-
-    public Entity createObstacle(
-            String id, int animationPeriod, List<PImage> images)
-    {
-        return new Entity(EntityKind.OBSTACLE, id, this, images, 0, 0, 0,
-                animationPeriod, 0, 0);
-    }
-
-    public Entity createHouse(
-            String id, List<PImage> images)
-    {
-        return new Entity(EntityKind.HOUSE, id, this, images, 0, 0, 0,
-                0, 0, 0);
-    }
 
     public Point nextPositionFairy(
             Entity entity, WorldModel world)
     {
-        int horiz = Integer.signum(this.x - entity.position.x);
-        Point newPos = new Point(entity.position.x + horiz, entity.position.y);
+        int horiz = Integer.signum(this.x - entity.getPosition().x);
+        Point newPos = new Point(entity.getPosition().x + horiz, entity.getPosition().y);
 
         if (horiz == 0 || world.isOccupied(newPos)) {
-            int vert = Integer.signum(this.y - entity.position.y);
-            newPos = new Point(entity.position.x, entity.position.y + vert);
+            int vert = Integer.signum(this.y - entity.getPosition().y);
+            newPos = new Point(entity.getPosition().x, entity.getPosition().y + vert);
 
             if (vert == 0 || world.isOccupied(newPos)) {
-                newPos = entity.position;
+                newPos = entity.getPosition();
             }
         }
 
@@ -148,5 +77,12 @@ public final class Point
     public boolean adjacent(Point p2) {
         return (this.x == p2.x && Math.abs(this.y - p2.y) == 1) || (this.y == p2.y
                 && Math.abs(this.x - p2.x) == 1);
+    }
+
+    public int distanceSquared(Point p2) {
+        int deltaX = this.x - p2.x;
+        int deltaY = this.y - p2.y;
+
+        return deltaX * deltaX + deltaY * deltaY;
     }
 }

@@ -88,7 +88,7 @@ public final class VirtualWorld extends PApplet
         if (entityOptional.isPresent())
         {
             Entity entity = entityOptional.get();
-            System.out.println(entity.id + ": " + entity.kind + " : " + entity.health);
+            System.out.println(entity.getID() + ": " + entity.getClass() + " : " + entity.getHealth());
         }
 
     }
@@ -164,7 +164,10 @@ public final class VirtualWorld extends PApplet
             WorldModel world, EventScheduler scheduler, ImageStore imageStore)
     {
         for (Entity entity : world.entities) {
-            scheduler.scheduleActions(entity, world, imageStore);
+            if (entity instanceof Able_to_animate) {
+                Able_to_animate otherentity = (Able_to_animate) entity;
+                otherentity.scheduleActions(world, imageStore, scheduler);
+            }
         }
     }
 

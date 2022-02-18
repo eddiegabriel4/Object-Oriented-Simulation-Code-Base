@@ -44,66 +44,6 @@ public final class EventScheduler
         }
     }
 
-    public void scheduleActions(
-            Entity entity,
-            WorldModel world,
-            ImageStore imageStore)
-    {
-        switch (entity.kind) {
-            case DUDE_FULL:
-                this.scheduleEvent(entity,
-                        entity.createActivityAction(world, imageStore),
-                        entity.actionPeriod);
-                this.scheduleEvent(entity,
-                        entity.createAnimationAction(0),
-                        (entity).getAnimationPeriod());
-                break;
-
-            case DUDE_NOT_FULL:
-                this.scheduleEvent(entity,
-                        entity.createActivityAction(world, imageStore),
-                        entity.actionPeriod);
-                this.scheduleEvent(entity,
-                        entity.createAnimationAction(0),
-                        (entity).getAnimationPeriod());
-                break;
-
-            case OBSTACLE:
-                this.scheduleEvent(entity,
-                        entity.createAnimationAction(0),
-                        (entity).getAnimationPeriod());
-                break;
-
-            case FAIRY:
-                this.scheduleEvent(entity,
-                        entity.createActivityAction (world, imageStore),
-                        entity.actionPeriod);
-                this.scheduleEvent(entity,
-                        entity.createAnimationAction(0),
-                        (entity).getAnimationPeriod());
-                break;
-
-            case SAPLING:
-                this.scheduleEvent(entity,
-                        entity.createActivityAction (world, imageStore),
-                        entity.actionPeriod);
-                this.scheduleEvent(entity,
-                        entity.createAnimationAction(0),
-                        (entity).getAnimationPeriod());
-                break;
-
-            case TREE:
-                this.scheduleEvent(entity,
-                        entity.createActivityAction (world, imageStore),
-                        entity.actionPeriod);
-                this.scheduleEvent(entity,
-                        entity.createAnimationAction(0),
-                        (entity).getAnimationPeriod());
-                break;
-
-            default:
-        }
-    }
 
     public void removePendingEvent(
              Event event)

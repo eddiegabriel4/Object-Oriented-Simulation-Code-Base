@@ -33,7 +33,7 @@ public final class WorldModel
 
             /* This moves the entity just outside of the grid for
              * debugging purposes. */
-            entity.position = new Point(-1, -1);
+            entity.changePosition(new Point(-1, -1));
             this.entities.remove(entity);
             this.setOccupancyCell(pos, null);
         }
@@ -66,14 +66,13 @@ public final class WorldModel
         }
     }
 
-    public Optional<Entity> findNearest(
-            Point pos, List<EntityKind> kinds)
+    public Optional<Entity> findNearest(Point pos, List<Class> list)
     {
         List<Entity> ofType = new LinkedList<>();
-        for (EntityKind kind: kinds)
+        for (Class kind: list)
         {
             for (Entity entity : this.entities) {
-                if (entity.kind == kind) {
+                if (entity.getClass() == kind) {
                     ofType.add(entity);
                 }
             }
@@ -83,52 +82,28 @@ public final class WorldModel
     }
 
     public void moveEntity(Entity entity, Point pos) {
-        Point oldPos = entity.position;
+        Point oldPos = entity.getPosition();
         if (this.withinBounds(pos) && !pos.equals(oldPos)) {
             this.setOccupancyCell(oldPos, null);
             this.removeEntityAt(pos);
             this.setOccupancyCell(pos, entity);
-            entity.position = pos;
+            entity.changePosition(pos);
         }
     }
 
-    public boolean moveToNotFull(
-            Entity dude,
-            Entity target,
-            EventScheduler scheduler)
-    {
-        if (dude.position.adjacent(target.position)) {
-            dude.resourceCount += 1;
-            target.health--;
-            return true;
-        }
-        else {
-            Point nextPos = this.nextPositionDude(dude, target.position);
-
-            if (!dude.position.equals(nextPos)) {
-                Optional<Entity> occupant = this.getOccupant(nextPos);
-                if (occupant.isPresent()) {
-                    scheduler.unscheduleAllEvents(occupant.get());
-                }
-
-                this.moveEntity(dude, nextPos);
-            }
-            return false;
-        }
-    }
 
     public Point nextPositionDude(
             Entity entity, Point destPos)
     {
-        int horiz = Integer.signum(destPos.x - entity.position.x);
-        Point newPos = new Point(entity.position.x + horiz, entity.position.y);
+        int horiz = Integer.signum(destPos.x - entity.getPosition().x);
+        Point newPos = new Point(entity.getPosition().x + horiz, entity.getPosition().y);
 
-        if (horiz == 0 || this.isOccupied(newPos) && this.getOccupancyCell(newPos).kind != EntityKind.STUMP) {
-            int vert = Integer.signum(destPos.y - entity.position.y);
-            newPos = new Point(entity.position.x, entity.position.y + vert);
+        if (horiz == 0 || this.isOccupied(newPos) && this.getOccupancyCell(newPos).getClass() != STUMP.class) {
+            int vert = Integer.signum(destPos.y - entity.getPosition().y);
+            newPos = new Point(entity.getPosition().x, entity.getPosition().y + vert);
 
-            if (vert == 0 || this.isOccupied(newPos) &&  this.getOccupancyCell(newPos).kind != EntityKind.STUMP) {
-                newPos = entity.position;
+            if (vert == 0 || this.isOccupied(newPos) &&  this.getOccupancyCell(newPos).getClass() != STUMP.class) {
+                newPos = entity.getPosition();
             }
         }
 
@@ -164,12 +139,23 @@ public final class WorldModel
     }
 
     public void tryAddEntity(Entity entity) {
-        if (this.isOccupied(entity.position)) {
+        if (this.isOccupied(entity.getPosition())) {
             // arguably the wrong type of exception, but we are not
             // defining our own exceptions yet
             throw new IllegalArgumentException("position occupied");
         }
 
-        entity.addEntity(this);
+        this.addEntity(entity);
+    }
+
+    public void addEntity(Entity entity) {
+        if (this.withinBounds(entity.getPosition())) {
+            this.setOccupancyCell(entity.getPosition(), entity);
+            this.entities.add(entity);
+        }
+    }
+
+    public void removeEntity(Entity entity) {
+        this.removeEntityAt(entity.getPosition());
     }
 }

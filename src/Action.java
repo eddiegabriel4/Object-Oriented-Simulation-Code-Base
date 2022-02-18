@@ -3,8 +3,14 @@
  *
  */
 
-public final class Action
-{
+public interface Action {
+
+    public void executeAction(EventScheduler scheduler);
+
+}
+
+
+/*
     public ActionKind kind;
     public Entity entity;
     public WorldModel world;
@@ -25,6 +31,8 @@ public final class Action
         this.repeatCount = repeatCount;
     }
 
+    /*
+
     public void executeAction(EventScheduler scheduler) {
         switch (this.kind) {
             case ACTIVITY:
@@ -36,6 +44,8 @@ public final class Action
                 break;
         }
     }
+
+
 
     public void executeAnimationAction(
             EventScheduler scheduler)
@@ -50,6 +60,8 @@ public final class Action
                     (this.entity).getAnimationPeriod());
         }
     }
+
+
 
 
 
@@ -86,10 +98,21 @@ public final class Action
                         "executeActivityAction not supported for %s",
                         this.entity.kind));
         }
+
+
+
+
+
+
+
     }
 
+ */
 
 
 
 
-}
+
+
+
+
