@@ -5,18 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class DUDE_FULL implements Able_to_animate, Able_to_activate, Full_move {
+public class DUDE_FULL extends Transformable_humanoid {
 
-    public String id;
-    public Point position;
-    public List<PImage> images;
-    public int imageIndex;
-    public int resourceLimit;
-    public int resourceCount;
-    public int actionPeriod;
-    public int animationPeriod;
-    public int health;
-    public int healthLimit;
 
     public DUDE_FULL(
             String id,
@@ -24,47 +14,12 @@ public class DUDE_FULL implements Able_to_animate, Able_to_activate, Full_move {
             int actionPeriod,
             int animationPeriod,
             int resourceLimit,
-            List<PImage> images)
-    {
-        this.id = id;
-        this.position = position;
-        this.images = images;
-        this.resourceLimit = resourceLimit;
-        this.actionPeriod = actionPeriod;
-        this.animationPeriod = animationPeriod;
+            List<PImage> images) {
+        super(id, position, images, resourceLimit, actionPeriod, animationPeriod);
 
     }
 
-    public Point getPosition() {
-        return position;
-    }
-
-    public void changePosition(Point position) {
-        this.position = position;
-    }
-
-    public String getID() {return id;}
-
-    public void changeHealth(int points) {
-        this.health = points;
-    }
-
-    public int getHealth() {
-        return health;
-    }
-
-    public PImage getCurrentImage() {
-        return (this).images.get((this).imageIndex);
-
-    }
-
-    public int getAnimationPeriod() {
-                return this.animationPeriod;
-    }
-
-    public void nextImage() {
-        this.imageIndex = (this.imageIndex + 1) % this.images.size();
-    }
+    /*
 
 
     public void executeDudeFullActivity(
@@ -73,7 +28,7 @@ public class DUDE_FULL implements Able_to_animate, Able_to_activate, Full_move {
             EventScheduler scheduler)
     {
         Optional<Entity> fullTarget =
-                world.findNearest(this.position, new ArrayList<>(Arrays.asList(HOUSE.class)));
+                world.findNearest(this.getPosition(), new ArrayList<>(Arrays.asList(HOUSE.class)));
 
         if (fullTarget.isPresent() && this.moveToFull(world,
                 fullTarget.get(), scheduler))
@@ -83,39 +38,87 @@ public class DUDE_FULL implements Able_to_animate, Able_to_activate, Full_move {
         else {
             scheduler.scheduleEvent(this,
                     new Activity_Action(this, world, imageStore),
-                    this.actionPeriod);
+                    this.getActionPeriod());
         }
     }
 
-    public void transformFull(
+     */
+
+    protected void doThing2(WorldModel world, EventScheduler scheduler, ImageStore imageStore) {
+        scheduler.scheduleEvent(this,
+                new Activity_Action(this, world, imageStore),
+                this.getActionPeriod());
+    }
+
+    protected void doThing1(WorldModel world, EventScheduler scheduler, ImageStore imageStore, Optional<Entity> Target) {
+
+        this.transformHumanoid(world, scheduler, imageStore);
+    }
+
+    protected boolean getCase1(Optional<Entity> target, WorldModel world, EventScheduler scheduler, ImageStore imageStore) {
+        return target.isPresent() && this.move_humanoid(world,
+                target.get(), scheduler);
+    }
+
+    protected Optional<Entity> getTarget(WorldModel world) {
+
+        return world.findNearest(this.getPosition(), new ArrayList<>(Arrays.asList(HOUSE.class)));
+    }
+
+    /*
+
+    public boolean transformFull(
             WorldModel world,
             EventScheduler scheduler,
-            ImageStore imageStore)
-    {
-        DUDE_NOT_FULL miner = new DUDE_NOT_FULL(this.id, this.position, this.actionPeriod,
-                this.animationPeriod,
-                this.resourceLimit,
-                this.images);
+            ImageStore imageStore) {
+        if (1 == 1) {
 
-        world.removeEntity(this);
-        scheduler.unscheduleAllEvents(this);
+            DUDE_NOT_FULL miner = new DUDE_NOT_FULL(this.getID(), this.getPosition(), this.getActionPeriod(),
+                    this.getAnimationPeriod(),
+                    this.getResourceLimit(),
+                    this.getImages());
 
-        world.addEntity(miner);
-        miner.scheduleActions(world, imageStore, scheduler);
+            world.removeEntity(this);
+            scheduler.unscheduleAllEvents(this);
+
+            world.addEntity(miner);
+            miner.scheduleActions(world, imageStore, scheduler);
+            return true;
+        }
+        return false;
     }
+
+     */
+
+    protected boolean getTransformCase(){
+        return true;
+    }
+
+    protected Transformable_humanoid getMiner(){
+        return new DUDE_NOT_FULL(this.getID(), this.getPosition(), this.getActionPeriod(),
+                this.getAnimationPeriod(),
+                this.getResourceLimit(),
+                this.getImages());
+    }
+
+
+    /*
+
+
 
     public boolean moveToFull(
             WorldModel world,
             Entity target,
             EventScheduler scheduler)
     {
-        if (this.position.adjacent(target.getPosition())) {
+        if (this.getPosition().adjacent(target.getPosition())) {
             return true;
         }
+
         else {
             Point nextPos = world.nextPositionDude(this, target.getPosition());
 
-            if (!this.position.equals(nextPos)) {
+            if (!this.getPosition().equals(nextPos)) {
                 Optional<Entity> occupant = world.getOccupant(nextPos);
                 if (occupant.isPresent()) {
                     scheduler.unscheduleAllEvents(occupant.get());
@@ -127,33 +130,21 @@ public class DUDE_FULL implements Able_to_animate, Able_to_activate, Full_move {
         }
     }
 
-    public void executeActivityAction(Activity_Action activity_action, EventScheduler scheduler) {
-        this.executeDudeFullActivity(activity_action.world,
-                activity_action.imageStore, scheduler);
+     */
 
+
+
+    protected Point getMovePosition(WorldModel world, Entity Target){
+        return world.nextPositionDude(this, Target.getPosition());
     }
 
-    public void executeAnimationAction(Animation_action animation_action,
-                                       EventScheduler scheduler) {
-        (this).nextImage();
-
-        if (animation_action.repeatCount != 1) {
-            scheduler.scheduleEvent(this,
-                    new Animation_action(this,
-                            Math.max(animation_action.repeatCount - 1,
-                                    0)),
-                    (this).getAnimationPeriod());
-        }
+    protected boolean doMoveThing1(WorldModel world, Entity Target, EventScheduler scheduler){
+        return true;
     }
 
-    public void scheduleActions(WorldModel world, ImageStore imageStore, EventScheduler scheduler) {
-        scheduler.scheduleEvent(this,
-                new Activity_Action(this, world, imageStore),
-                this.actionPeriod);
-        scheduler.scheduleEvent(this,
-                new Animation_action(this,0),
-                (this).getAnimationPeriod());
-    }
+
+
+
 
 
 

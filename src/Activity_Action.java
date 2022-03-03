@@ -3,7 +3,7 @@ public class Activity_Action implements Action {
     public Able_to_activate entity;
     public WorldModel world;
     public ImageStore imageStore;
-    public int repeatCount;
+
 
 
     public Activity_Action(Able_to_activate entity, WorldModel world, ImageStore imageStore)
@@ -13,9 +13,13 @@ public class Activity_Action implements Action {
         this.imageStore = imageStore;
     }
 
+
+
     public void executeAction(EventScheduler scheduler) {
 
         entity.executeActivityAction(this, scheduler);
 
     }
+
+
 }

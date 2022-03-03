@@ -6,15 +6,58 @@ import processing.core.PImage;
  * An entity that exists in the world. See EntityKind for the
  * different kinds of entities that exist.
  */
-public interface Entity {
+public abstract class Entity {
 
-    public void nextImage();
-    public PImage getCurrentImage();
-    public Point getPosition();
-    public void changePosition(Point position);
-    public void changeHealth(int points);
-    public int getHealth();
-    public String getID();
+    private String id;
+    private Point position;
+    private List<PImage> images;
+    private int imageIndex;
+    private int health;
+    private int healthLimit;
+
+    public Entity(String id, Point position, List<PImage> images){
+        this.id = id;
+        this.position = position;
+        this.images = images;
+    }
+
+
+
+    public int getHealth() {
+        return health;
+    }
+
+
+
+    public int getHealthLimit() { return healthLimit; }
+
+
+
+    public void changeHealth(int points) {
+        this.health = points;
+    }
+
+
+
+    public List<PImage> getImages() { return this.images; }
+
+    public void nextImage() {
+        this.imageIndex = (this.imageIndex + 1) % this.images.size();
+    }
+
+    public PImage getCurrentImage() {
+        return (this).images.get((this).imageIndex);
+    }
+
+    public Point getPosition() {
+        return position;
+    }
+
+    public void changePosition(Point position) {
+        this.position = position;
+    }
+
+    public String getID() {return id;}
 
 }
     /*

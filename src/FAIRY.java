@@ -5,18 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class FAIRY implements Able_to_animate, Able_to_activate {
-
-    public String id;
-    public Point position;
-    public List<PImage> images;
-    public int imageIndex;
-    public int resourceLimit;
-    public int resourceCount;
-    public int actionPeriod;
-    public int animationPeriod;
-    public int health;
-    public int healthLimit;
+public class FAIRY extends Able_to_move {
 
 
     public FAIRY(
@@ -25,57 +14,29 @@ public class FAIRY implements Able_to_animate, Able_to_activate {
             int actionPeriod,
             int animationPeriod,
             List<PImage> images) {
-        this.id = id;
-        this.position = position;
-        this.images = images;
-        this.actionPeriod = actionPeriod;
-        this.animationPeriod = animationPeriod;
+
+        super(id, position, images, actionPeriod, animationPeriod);
 
     }
 
-    public Point getPosition() {
-        return position;
-    }
+    /*
 
-    public void changePosition(Point position) {
-        this.position = position;
-    }
 
-    public void changeHealth(int points) {
-        this.health = points;
-    }
 
-    public int getHealth() {
-        return health;
-    }
-
-    public PImage getCurrentImage() {
-        return (this).images.get((this).imageIndex);
-
-    }
-
-    public String getID() {return id;}
-
-    public int getAnimationPeriod() {
-        return this.animationPeriod;
-    }
-
-    public void nextImage() {
-        this.imageIndex = (this.imageIndex + 1) % this.images.size();
-    }
 
     public void executeFairyActivity(
             WorldModel world,
             ImageStore imageStore,
             EventScheduler scheduler) {
+
         Optional<Entity> fairyTarget =
-                world.findNearest(this.position, new ArrayList<>(Arrays.asList(STUMP.class)));
+                world.findNearest(this.getPosition(), new ArrayList<>(Arrays.asList(STUMP.class)));
 
         if (fairyTarget.isPresent()) {
             Point tgtPos = fairyTarget.get().getPosition();
 
             if (this.moveToFairy(world, fairyTarget.get(), scheduler)) {
-                SAPLING sapling = new SAPLING("sapling_" + this.id, tgtPos,
+                SAPLING sapling = new SAPLING("sapling_" + this.getID(), tgtPos,
                         imageStore.getImageList(Functions.SAPLING_KEY));
 
                 world.addEntity(sapling);
@@ -83,23 +44,68 @@ public class FAIRY implements Able_to_animate, Able_to_activate {
             }
         }
 
+
+            scheduler.scheduleEvent(this,
+                    new Activity_Action(this, world, imageStore),
+                    this.getActionPeriod());
+
+    }
+
+     */
+
+
+
+    protected void doThing2(WorldModel world, EventScheduler scheduler, ImageStore imageStore){
         scheduler.scheduleEvent(this,
                 new Activity_Action(this, world, imageStore),
-                this.actionPeriod);
+                this.getActionPeriod());
     }
+
+
+    protected void doThing1(WorldModel world, EventScheduler scheduler, ImageStore imageStore, Optional<Entity> Target){
+
+        Point tgtPos = Target.get().getPosition();
+
+        if (this.move_humanoid(world, Target.get(), scheduler)) {
+            SAPLING sapling = new SAPLING("sapling_" + this.getID(), tgtPos,
+                    imageStore.getImageList(Functions.SAPLING_KEY));
+
+            world.addEntity(sapling);
+            sapling.scheduleActions(world, imageStore, scheduler);
+        }
+        scheduler.scheduleEvent(this,
+                new Activity_Action(this, world, imageStore),
+                this.getActionPeriod());
+    }
+
+    protected boolean getCase1(Optional<Entity> target, WorldModel world, EventScheduler scheduler, ImageStore imageStore) {
+        return target.isPresent();
+    }
+
+    protected Optional<Entity> getTarget(WorldModel world){
+
+        return world.findNearest(this.getPosition(), new ArrayList<>(Arrays.asList(STUMP.class)));
+    }
+
+
+    /*
+
+
 
     public boolean moveToFairy(
             WorldModel world,
             Entity target,
             EventScheduler scheduler) {
-        if (this.position.adjacent(target.getPosition())) {
+
+        if (this.getPosition().adjacent(target.getPosition())) {
             world.removeEntity(target);
             scheduler.unscheduleAllEvents(target);
             return true;
+
         } else {
             Point nextPos = target.getPosition().nextPositionFairy(this, world);
 
-            if (!this.position.equals(nextPos)) {
+            if (!this.getPosition().equals(nextPos)) {
                 Optional<Entity> occupant = world.getOccupant(nextPos);
                 if (occupant.isPresent()) {
                     scheduler.unscheduleAllEvents(occupant.get());
@@ -111,32 +117,25 @@ public class FAIRY implements Able_to_animate, Able_to_activate {
         }
     }
 
+     */
 
-    public void executeAnimationAction(Animation_action animation_action,
-                                       EventScheduler scheduler) {
-        (this).nextImage();
 
-        if (animation_action.repeatCount != 1) {
-            scheduler.scheduleEvent(this,
-                    new Animation_action(this,
-                            Math.max(animation_action.repeatCount - 1,
-                                    0)),
-                    (this).getAnimationPeriod());
-        }
+
+    protected Point getMovePosition(WorldModel world, Entity Target){
+        return Target.getPosition().nextPositionFairy(this, world);
     }
 
-    public void executeActivityAction(Activity_Action activity_action, EventScheduler scheduler) {
-        this.executeFairyActivity(activity_action.world,
-                activity_action.imageStore, scheduler);
+    protected boolean doMoveThing1(WorldModel world, Entity Target, EventScheduler scheduler){
+
+        world.removeEntity(Target);
+        scheduler.unscheduleAllEvents(Target);
+        return true;
+
     }
 
-    public void scheduleActions(WorldModel world, ImageStore imageStore, EventScheduler scheduler) {
-        scheduler.scheduleEvent(this,
-                new Activity_Action(this, world, imageStore),
-                this.actionPeriod);
-        scheduler.scheduleEvent(this,
-                new Animation_action(this, 0),
-                (this).getAnimationPeriod());
-    }
+
+
+
+
 
 }
