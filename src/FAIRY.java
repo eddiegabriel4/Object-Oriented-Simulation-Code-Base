@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 public class FAIRY extends Able_to_move {
+
 
 
     public FAIRY(
@@ -16,6 +18,7 @@ public class FAIRY extends Able_to_move {
             List<PImage> images) {
 
         super(id, position, images, actionPeriod, animationPeriod);
+
 
     }
 
@@ -121,9 +124,15 @@ public class FAIRY extends Able_to_move {
 
 
 
-    protected Point getMovePosition(WorldModel world, Entity Target){
-        return Target.getPosition().nextPositionFairy(this, world);
+
+    protected Predicate<Point> canPassThrough(WorldModel world)
+
+    {
+        Predicate<Point> withinBounds = p -> world.withinBounds(p);
+        Predicate<Point> last =  p -> (withinBounds.test(p) && !world.isOccupied(p));
+        return last;
     }
+
 
     protected boolean doMoveThing1(WorldModel world, Entity Target, EventScheduler scheduler){
 

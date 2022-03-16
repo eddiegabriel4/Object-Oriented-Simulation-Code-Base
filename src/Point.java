@@ -56,23 +56,6 @@ public final class Point
     }
 
 
-    public Point nextPositionFairy(
-            Entity entity, WorldModel world)
-    {
-        int horiz = Integer.signum(this.x - entity.getPosition().x);
-        Point newPos = new Point(entity.getPosition().x + horiz, entity.getPosition().y);
-
-        if (horiz == 0 || world.isOccupied(newPos)) {
-            int vert = Integer.signum(this.y - entity.getPosition().y);
-            newPos = new Point(entity.getPosition().x, entity.getPosition().y + vert);
-
-            if (vert == 0 || world.isOccupied(newPos)) {
-                newPos = entity.getPosition();
-            }
-        }
-
-        return newPos;
-    }
 
     public boolean adjacent(Point p2) {
         return (this.x == p2.x && Math.abs(this.y - p2.y) == 1) || (this.y == p2.y
@@ -85,4 +68,5 @@ public final class Point
 
         return deltaX * deltaX + deltaY * deltaY;
     }
+
 }

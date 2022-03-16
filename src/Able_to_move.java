@@ -1,8 +1,11 @@
 import processing.core.PImage;
 
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 
 
 public abstract class Able_to_move extends Able_to_activate {
@@ -38,22 +41,61 @@ public abstract class Able_to_move extends Able_to_activate {
 
         }
         else {
-            Point nextPos = getMovePosition(world, Target);
 
-            if (!this.getPosition().equals(nextPos)) {
-                Optional<Entity> occupant = world.getOccupant(nextPos);
-                if (occupant.isPresent()) {
-                    scheduler.unscheduleAllEvents(occupant.get());
+            PathingStrategy nextPos = new AStarPathingStrategy();
+
+            BiPredicate<Point, Point> withinReach = (p1, p2) -> PathingStrategy.CARDINAL_NEIGHBORS.apply(p1).anyMatch(p -> p.equals(p2));
+
+            List<Point> path = nextPos.computePath(this.getPosition(), Target.getPosition(), this.canPassThrough(world), withinReach, PathingStrategy.CARDINAL_NEIGHBORS);
+
+            if (path != null) {
+
+
+                if (!this.getPosition().equals(path.get(0))) {
+                    Optional<Entity> occupant = world.getOccupant(path.get(0));
+                    if (occupant.isPresent()) {
+                        scheduler.unscheduleAllEvents(occupant.get());
+                    }
+
+                    world.moveEntity(this, path.get(0));
                 }
-
-                world.moveEntity(this, nextPos);
+                return false;
             }
             return false;
         }
 
     }
 
-    protected abstract Point getMovePosition(WorldModel world, Entity Target);
+    /*
+
+
+
+    public Point nextPosition(
+            WorldModel world, Point destPos)
+    {
+        int horiz = Integer.signum(destPos.x - this.getPosition().x);
+        Point newPos = new Point(this.getPosition().x + horiz, this.getPosition().y);
+
+        if (horiz == 0 || !this.tester(world, newPos)) {
+            int vert = Integer.signum(destPos.y - this.getPosition().y);
+            newPos = new Point(this.getPosition().x, this.getPosition().y + vert);
+
+            if (vert == 0 || !this.tester(world, newPos)) {
+                newPos = this.getPosition();
+            }
+        }
+
+        return newPos;
+    }
+
+     */
+
+
+
+    protected abstract Predicate<Point> canPassThrough(WorldModel world);
+
+
+
 
     protected abstract boolean doMoveThing1(WorldModel world, Entity Target, EventScheduler scheduler);
 

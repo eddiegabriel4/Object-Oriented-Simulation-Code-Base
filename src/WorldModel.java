@@ -91,6 +91,8 @@ public final class WorldModel
         }
     }
 
+    /*
+
 
     public Point nextPositionDude(
             Entity entity, Point destPos)
@@ -109,6 +111,27 @@ public final class WorldModel
 
         return newPos;
     }
+
+
+    public Point nextPositionFairy(
+            Entity entity, Point destPos)
+    {
+        int horiz = Integer.signum(destPos.x - entity.getPosition().x);
+        Point newPos = new Point(entity.getPosition().x + horiz, entity.getPosition().y);
+
+        if (horiz == 0 || this.isOccupied(newPos) && true){
+            int vert = Integer.signum(destPos.y - entity.getPosition().y);
+            newPos = new Point(entity.getPosition().x, entity.getPosition().y + vert);
+
+            if (vert == 0 || this.isOccupied(newPos) && true) {
+                newPos = entity.getPosition();
+            }
+        }
+
+        return newPos;
+    }
+
+     */
 
     public void setBackground(
             Point pos, Background background)
@@ -147,6 +170,7 @@ public final class WorldModel
 
         this.addEntity(entity);
     }
+
 
     public void addEntity(Entity entity) {
         if (this.withinBounds(entity.getPosition())) {

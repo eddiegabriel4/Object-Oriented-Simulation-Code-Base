@@ -1,11 +1,14 @@
 import processing.core.PImage;
 
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 public class DUDE_FULL extends Transformable_humanoid {
+
 
 
     public DUDE_FULL(
@@ -16,6 +19,7 @@ public class DUDE_FULL extends Transformable_humanoid {
             int resourceLimit,
             List<PImage> images) {
         super(id, position, images, resourceLimit, actionPeriod, animationPeriod);
+
 
     }
 
@@ -43,6 +47,14 @@ public class DUDE_FULL extends Transformable_humanoid {
     }
 
      */
+
+    protected Predicate<Point> canPassThrough(WorldModel world) {
+        Predicate<Point> withinBounds = p -> world.withinBounds(p);
+        Predicate<Point> last = p -> withinBounds.test(p) && (!world.isOccupied(p) || world.getOccupancyCell(p).getClass() == STUMP.class);
+        return last;
+    }
+
+
 
     protected void doThing2(WorldModel world, EventScheduler scheduler, ImageStore imageStore) {
         scheduler.scheduleEvent(this,
@@ -133,10 +145,6 @@ public class DUDE_FULL extends Transformable_humanoid {
      */
 
 
-
-    protected Point getMovePosition(WorldModel world, Entity Target){
-        return world.nextPositionDude(this, Target.getPosition());
-    }
 
     protected boolean doMoveThing1(WorldModel world, Entity Target, EventScheduler scheduler){
         return true;

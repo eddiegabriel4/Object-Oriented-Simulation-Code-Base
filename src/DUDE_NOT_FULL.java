@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 public class DUDE_NOT_FULL extends Transformable_humanoid {
+
+
 
 
     public DUDE_NOT_FULL(
@@ -130,11 +133,13 @@ public class DUDE_NOT_FULL extends Transformable_humanoid {
 
      */
 
-
-
-    protected Point getMovePosition(WorldModel world, Entity Target){
-        return world.nextPositionDude(this, Target.getPosition());
+    protected Predicate<Point> canPassThrough(WorldModel world) {
+        Predicate<Point> withinBounds = p -> world.withinBounds(p);
+        Predicate<Point> last = p -> withinBounds.test(p) && (!world.isOccupied(p) || world.getOccupancyCell(p).getClass() == STUMP.class);
+        return last;
     }
+
+
 
     protected boolean doMoveThing1(WorldModel world, Entity Target, EventScheduler scheduler){
 

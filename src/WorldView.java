@@ -66,4 +66,5 @@ public final class WorldView
         this.drawBackground();
         this.drawEntities();
     }
+
 }
